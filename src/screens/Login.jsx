@@ -14,7 +14,7 @@ const Login = ({ navigation }) => {
 
   const isValidPhoneNumberAndFullName = (phone, fullname) => {
     setMessages([])
-    let newMessages = messages
+    let newMessages = []
     if (/^(079|078|072|073)\d{7}$/.test(phone)) {
     } else {
       newMessages.push("Incorrect phone number")
@@ -23,7 +23,8 @@ const Login = ({ navigation }) => {
       newMessages.push("Name cannot be empty")
     }
     setMessages(newMessages)
-    return messages.length == 0 ? true : false;
+    console.log("Messages: ", messages)
+    return newMessages.length == 0 ? true : false;
   }
 
   const saveData = async () => {
