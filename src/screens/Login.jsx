@@ -14,15 +14,15 @@ const Login = ({ navigation }) => {
 
   const isValidPhoneNumberAndFullName = (phone, fullname) => {
     setMessages([])
+    let newMessages = messages
     if (/^(079|078|072|073)\d{7}$/.test(phone)) {
     } else {
-      // messages.push("Incorrect phone number")
-      setMessages((prevMessages) => [...prevMessages, "Incorrect phone number"]);
+      newMessages.push("Incorrect phone number")
     }
     if (fullname.length == 0) {
-      // messages.push("Name cannot be empty")
-      setMessages((prevMessages) => [...prevMessages, "Name cannot be empty"]);
+      newMessages.push("Name cannot be empty")
     }
+    setMessages(newMessages)
     return messages.length == 0 ? true : false;
   }
 
@@ -31,15 +31,15 @@ const Login = ({ navigation }) => {
     if (!isValidPhoneNumberAndFullName(phoneNumber, name)) {
       setIsError(true)
       return
-    }
-    setIsError(false)
-    try {
-      await AsyncStorage.setItem('userFullName', name);
-      await AsyncStorage.setItem('userPhoneNumber', phoneNumber);
-      navigation.navigate('Driver')
-    } catch (error) {
-      console.error(error)
-      // Error saving data
+    } else {
+      setIsError(false)
+      try {
+        await AsyncStorage.setItem('userFullName', name);
+        await AsyncStorage.setItem('userPhoneNumber', phoneNumber);
+        navigation.navigate('Driver')
+      } catch (error) {
+        console.error(error)
+      }
     }
   };
 
