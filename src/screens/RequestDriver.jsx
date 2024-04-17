@@ -5,13 +5,14 @@ import { Marker } from 'react-native-maps';
 import Button from '../components/Button';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { AntDesign } from '@expo/vector-icons';
+import { writeDataToFirestore } from '../firebase/config';
 
 const width = Dimensions.get('window').width * 0.8;
 const height = Dimensions.get('window').height * 0.3;
 
 const RequestDriver = ({ navigation }) => {
+
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -37,20 +38,18 @@ const RequestDriver = ({ navigation }) => {
         })();
     }, []);
 
-    const sendMail = () => {
+    const sendRequest = () => {
+        
         setIsRequestMade(true)
         setIsLoading(true)
-        axios.post('https://webhook.site/0a86bbe0-55bd-4240-a648-8c0f9d1c39af', {
-            phone: phoneNumber,
-            fullname: userFullName
+
+        writeDataToFirestore(userFullName, phoneNumber).then((result) => {
+            console.log(result)
+            setIsLoading(false)
+        }).catch((error) => {
+            console.error(error)
         })
-            .then(function (response) {
-                console.log(response.data);
-                setIsLoading(false)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+
     }
 
     const clearData = async () => {
@@ -125,7 +124,7 @@ const RequestDriver = ({ navigation }) => {
             <View
                 style={styles.floatingContainer}
             >
-                <Button title='Request Driver' onPress={sendMail} />
+                <Button title='Request Driver' onPress={sendRequest} />
                 {/* <Button title='Clear Data' onPress={clearData} /> */}
             </View>
         </View>
