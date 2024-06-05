@@ -1,7 +1,7 @@
 import { StyleSheet, View, Modal, Text, Pressable, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Button from '../components/Button';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +11,7 @@ import { writeDataToFirestore } from '../firebase/config';
 const width = Dimensions.get('window').width * 0.8;
 const height = Dimensions.get('window').height * 0.3;
 
-const RequestDriver = ({ navigation }) => {
+const LocationScreen = ({ navigation }) => {
 
 
     const [location, setLocation] = useState(null);
@@ -39,16 +39,17 @@ const RequestDriver = ({ navigation }) => {
     }, []);
 
     const sendRequest = () => {
+        navigation.navigate('Driver')
         
-        setIsRequestMade(true)
-        setIsLoading(true)
+        // setIsRequestMade(true)
+        // setIsLoading(true)
 
-        writeDataToFirestore(userFullName, phoneNumber).then((result) => {
-            console.log(result)
-            setIsLoading(false)
-        }).catch((error) => {
-            console.error(error)
-        })
+        // writeDataToFirestore(userFullName, phoneNumber).then((result) => {
+        //     console.log(result)
+        //     setIsLoading(false)
+        // }).catch((error) => {
+        //     console.error(error)
+        // })
 
     }
 
@@ -74,6 +75,7 @@ const RequestDriver = ({ navigation }) => {
         <View style={styles.container}>
             {location && (
                 <MapView
+                    provider={PROVIDER_GOOGLE}
                     style={styles.map}
                     initialRegion={{
                         latitude: location.coords.latitude,
@@ -124,14 +126,14 @@ const RequestDriver = ({ navigation }) => {
             <View
                 style={styles.floatingContainer}
             >
-                <Button title='Request Driver' onPress={sendRequest} />
+                <Button title='Select Driver' onPress={sendRequest} />
                 {/* <Button title='Clear Data' onPress={clearData} /> */}
             </View>
         </View>
     )
 }
 
-export default RequestDriver
+export default LocationScreen
 
 const styles = StyleSheet.create({
     container: {

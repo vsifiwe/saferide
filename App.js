@@ -3,7 +3,9 @@ import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './src/screens/Login'
-import RequestDriver from './src/screens/RequestDriver';
+import LocationScreen from './src/screens/LocationScreen';
+import Driver from './src/screens/Driver';
+import Time from './src/screens/Time';      
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +14,9 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Login' component={Login}/>
-        <Stack.Screen name='Driver' component={RequestDriver} />
+        <Stack.Screen name='Location' component={LocationScreen} />
+        <Stack.Screen name='Driver' component={Driver} />
+        <Stack.Screen name='Time' component={Time} />
       </Stack.Navigator>
     </NavigationContainer>
   );

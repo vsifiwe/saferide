@@ -48,7 +48,7 @@ const Login = ({ navigation }) => {
     try {
       const value = await AsyncStorage.getItem('userPhoneNumber');
       if (value !== null) {
-        navigation.navigate('Driver')
+        navigation.navigate('Location')
       }
       // If value is null, do nothing
     } catch (error) {
