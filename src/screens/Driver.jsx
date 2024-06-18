@@ -3,7 +3,7 @@ import Button from '../components/Button';
 import React, { useState, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { writeDataToFirestore } from '../firebase/config';
 
 const width = Dimensions.get('window').width * 0.8;
@@ -95,8 +95,8 @@ const Driver = ({ navigation }) => {
       )}
       <TouchableOpacity onPress={() => handleSelectDriver('Seleman M.')}>
         <View style={[styles.card, selectedDriver === 'Seleman M.' && styles.selectedCard]}>
-          <Text>Profile</Text>
-          <View>
+          <Feather style={styles.profile} name="user" size={48} color="black" />
+          <View style={styles.detailText}>
             <Text>Name: Seleman M.</Text>
             <Text>Quality: Punctual, Courteous</Text>
             <Text>Contact: 078****871</Text>
@@ -105,8 +105,8 @@ const Driver = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => handleSelectDriver('Dylan R.')}>
         <View style={[styles.card, selectedDriver === 'Dylan R.' && styles.selectedCard]}>
-          <Text>Profile</Text>
-          <View>
+        <Feather style={styles.profile} name="user" size={48} color="black" />
+          <View style={styles.detailText}>
             <Text>Name: Dylan R.</Text>
             <Text>Quality: Polyglot (French, English, Swahili, Kinyarwanda)</Text>
             <Text>Contact: 078****589</Text>
@@ -115,8 +115,8 @@ const Driver = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={() => handleSelectDriver('Elvis N.')}>
         <View style={[styles.card, selectedDriver === 'Elvis N.' && styles.selectedCard]}>
-          <Text>Profile</Text>
-          <View>
+        <Feather style={styles.profile} name="user" size={48} color="black" />
+          <View style={styles.detailText}>
             <Text>Name: Elvis N.</Text>
             <Text>Quality: Experienced (Many driving categories)</Text>
             <Text>Contact: 078****640</Text>
@@ -127,10 +127,7 @@ const Driver = ({ navigation }) => {
         style={styles.floatingContainer}
       >
         <Button title='Select Time' onPress={
-
-          // () => { navigation.navigate('Time') }
           selectedDriver != null ? showTimepicker : () => Alert.alert('Error', 'Please select a driver first')
-
         }
         />
       </View>
@@ -225,29 +222,38 @@ modalView: {
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-}, 
-button: {
-  width: width * 0.7,
-  height: height * 0.2,
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: 8,
-  padding: 10,
-  elevation: 2,
-},
-buttonOpen: {
-  backgroundColor: '#F194FF',
-},
-buttonClose: {
-  backgroundColor: '#2196F3',
-},
-textStyle: {
-  color: 'white',
-  fontWeight: 'bold',
-  textAlign: 'center',
-},
-modalText: {
-  marginBottom: 15,
-  textAlign: 'center',
-},
+  }, 
+  button: {
+    width: width * 0.7,
+    height: height * 0.2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  profile: {
+    marginRight: 20,
+    padding: 10,
+    borderRadius: 50,
+    backgroundColor: '#e6f0ff',
+  }, 
+  detailText: {
+    flexShrink: 1
+  }
 });
