@@ -1,13 +1,32 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Modal, Pressable, ActivityIndicator, Dimensions } from 'react-native';
 import Button from '../components/Button';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
+import { writeDataToFirestore } from '../firebase/config';
+
+const width = Dimensions.get('window').width * 0.8;
+const height = Dimensions.get('window').height * 0.3;
 
 const Driver = ({ navigation }) => {
 
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [date, setDate] = useState(new Date(1598051730000));
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isRequestMade, setIsRequestMade] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [userFullName, setUserFullName] = useState('')
+
+  useEffect(() => {
+    ( async () => {
+        const value = await AsyncStorage.getItem('userPhoneNumber');
+        const fullName = await AsyncStorage.getItem('userFullName')
+        setPhoneNumber(value)
+        setUserFullName(fullName)
+    })();
+  }, []);
 
   const onChange = (event, selectedDate) => {
     setDate(selectedDate);
@@ -19,6 +38,23 @@ const Driver = ({ navigation }) => {
     setShow(true);
 
   };
+
+  const sendRequest = () => {
+    setIsRequestMade(true)
+    setIsLoading(true)
+
+    writeDataToFirestore(userFullName, phoneNumber).then((result) => {
+        console.log(result)
+        setIsLoading(false)
+    }).catch((error) => {
+        console.error(error)
+    })
+  }
+
+  const endOperation = () => {
+    setIsRequestMade(!isRequestMade)
+    navigation.navigate('Time')
+  }
 
   const showConfirmationAlert = (selectedDate) => {
     Alert.alert(
@@ -32,7 +68,7 @@ const Driver = ({ navigation }) => {
         },
         {
           text: 'Confirm',
-          onPress: () => navigation.navigate('Time'),
+          onPress: sendRequest,
         },
       ],
       { cancelable: false }
@@ -98,6 +134,35 @@ const Driver = ({ navigation }) => {
         }
         />
       </View>
+
+      <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isRequestMade}
+                onRequestClose={() => {
+                    setIsRequestMade(!isRequestMade);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        {
+                            isLoading ?
+                            <ActivityIndicator size="large"/>
+                                : <>
+                                    <AntDesign name="checkcircle" size={58} color="#06a103" />
+                                    <Text style={styles.modalText}>Thank you, {userFullName}!</Text>
+                                    <Text style={styles.modalText}>A driver will call you shortly on {phoneNumber}</Text>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonClose]}
+                                        onPress={endOperation}>
+                                        <Text style={styles.textStyle}>Okay!</Text>
+                                    </Pressable>
+                                </>
+                        }
+
+                    </View>
+                </View>
+            </Modal>
+
     </View>
   );
 };
@@ -138,4 +203,51 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 90
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+},
+modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    height: height,
+    width: width,
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+}, 
+button: {
+  width: width * 0.7,
+  height: height * 0.2,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 8,
+  padding: 10,
+  elevation: 2,
+},
+buttonOpen: {
+  backgroundColor: '#F194FF',
+},
+buttonClose: {
+  backgroundColor: '#2196F3',
+},
+textStyle: {
+  color: 'white',
+  fontWeight: 'bold',
+  textAlign: 'center',
+},
+modalText: {
+  marginBottom: 15,
+  textAlign: 'center',
+},
 });

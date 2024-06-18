@@ -6,7 +6,6 @@ import Button from '../components/Button';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
-import { writeDataToFirestore } from '../firebase/config';
 
 const width = Dimensions.get('window').width * 0.8;
 const height = Dimensions.get('window').height * 0.3;
