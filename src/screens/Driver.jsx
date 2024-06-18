@@ -1,9 +1,43 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import Button from '../components/Button';
 import React, { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-const Driver = ({navigation}) => {
+const Driver = ({ navigation }) => {
+
   const [selectedDriver, setSelectedDriver] = useState(null);
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    setDate(selectedDate);
+    setShow(false);
+    showConfirmationAlert(selectedDate);
+  };
+
+  const showTimepicker = () => {
+    setShow(true);
+
+  };
+
+  const showConfirmationAlert = (selectedDate) => {
+    Alert.alert(
+      'Confirmation',
+      `You have selected ${selectedDriver} and preferred pickup time is ${selectedDate.getHours()}:${selectedDate.getMinutes()}`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          onPress: () => navigation.navigate('Time'),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
 
   const handleSelectDriver = (name) => {
     setSelectedDriver(name);
@@ -14,6 +48,15 @@ const Driver = ({navigation}) => {
       <Text style={styles.title} accessibilityLabel="Choose Driver Title">
         Choose Driver
       </Text>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode='time'
+          is24Hour={true}
+          onChange={onChange}
+        />
+      )}
       <TouchableOpacity onPress={() => handleSelectDriver('Seleman M.')}>
         <View style={[styles.card, selectedDriver === 'Seleman M.' && styles.selectedCard]}>
           <Text>Profile</Text>
@@ -45,10 +88,16 @@ const Driver = ({navigation}) => {
         </View>
       </TouchableOpacity>
       <View
-                style={styles.floatingContainer}
-            >
-      <Button title='Select Time' onPress={() => { navigation.navigate('Time')}} />
-            </View>
+        style={styles.floatingContainer}
+      >
+        <Button title='Select Time' onPress={
+
+          // () => { navigation.navigate('Time') }
+          selectedDriver != null ? showTimepicker : () => Alert.alert('Error', 'Please select a driver first')
+
+        }
+        />
+      </View>
     </View>
   );
 };
@@ -88,5 +137,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '90%',
     height: 90
-},
+  },
 });
